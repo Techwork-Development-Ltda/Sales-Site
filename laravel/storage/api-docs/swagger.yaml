@@ -1,0 +1,660 @@
+openapi: 3.0.3
+info:
+  title: API
+  version: 1.0.0
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /api/login:
+    post:
+      tags:
+        - AUTENTICAÇÃO
+      summary: Realiza o login do usuário
+      description: Autenticação de usuários usando email e senha.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - senha
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "test@gmail.com"
+                password:
+                  type: string
+                  format: password
+                  example: "123456"
+      responses:
+        '200':
+          description: Token gerado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Token gerado com sucesso.
+                  erros:
+                    type: array
+                    items: {}
+                    example: []
+                  dados:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: >-
+                          eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.abc.def.ghi
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 42
+                          name:
+                            type: string
+                            example: "Usuário Exemplo"
+                          email:
+                            type: string
+                            example: "usuario@exemplo.com"
+                          email_verified_at:
+                            type: string
+                            nullable: true
+                            example: null
+                  _links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: /api/login
+                      logout:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: /api/logout
+                          method:
+                            type: string
+                            example: POST
+                      get:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: /api/user/self
+                          method:
+                            type: string
+                            example: GET
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Credênciais invalidas."
+                  erros:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - "Email e senha não se verificam"
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+        '422':
+          description: Erro ao validar campos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Error Processing Request"
+                  erros:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - "Campo email é obrigatório."
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+
+  /api/logout:
+    post:
+      tags:
+        - AUTENTICAÇÃO
+      summary: Expira o seu token atual, encerrando sessão.
+      description: Encerra a sessão do usuário autenticado, invalidando o token JWT atual.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout efetuado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Logout efetuado
+                  erros:
+                    type: array
+                    items: {}
+                    example: []
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+                  _links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/logout
+                      login:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/login
+                      user:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/self
+
+  /api/user/self:
+    get:
+      tags:
+        - AUTENTICAÇÃO
+      summary: Recupera dados do usuário autenticado
+      description: Recupera dados do usuário pelo token gerado.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Usuário encontrado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Usuario encontrado com sucesso."
+                  erros:
+                    type: array
+                    items: {}
+                    example: []
+                  dados:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: "Test"
+                      email:
+                        type: string
+                        example: "test@gmail.com"
+                      email_verified_at:
+                        type: string
+                        nullable: true
+                        example: null
+                  _links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: /api/user/self
+                      logout:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: /api/logout
+                          method:
+                            type: string
+                            example: POST
+
+  #Usuario
+  /api/user:
+    post:
+      tags:
+        - USUARIO
+      summary: Cadastro de usuario.
+      description: Cadastra um novo usuário no sistema.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Test
+                email:
+                  type: string
+                  example: test02@gmail.com
+                password:
+                  type: string
+                  example: Abc123!
+      responses:
+        '200':
+          description: Usuário adicionado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Usuario adicionado com sucesso.
+                  erros:
+                    type: array
+                    items:
+                      type: string
+                    example: []
+                  dados:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 4
+                      user:
+                        type: string
+                        example: test
+                      email:
+                        type: string
+                        example: test02@gmail.com
+                  _links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/4
+                      get:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/4
+                          method:
+                            type: string
+                            example: GET
+                      update:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/4
+                          method:
+                            type: string
+                            example: PUT
+                      delete:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/4
+                          method:
+                            type: string
+                            example: DELETE
+                      status:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/4
+                          method:
+                            type: string
+                            example: PATCH
+        '409':
+          description: Duplicidade identificada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Duplicidade identificada.
+                  erros:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - Email já cadastrado.
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+        '422':
+          description: Erro de validação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error Processing Request
+                  erros:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - "O campo 'name' é obrigatório."
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+
+  /api/user/{id}:
+    get:
+      tags:
+        - USUARIO
+      summary: Consulta usuario.
+      description: Consulta um usuário pelo ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Usuário encontrado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Usuario encontrado com sucesso.
+                  erros:
+                    type: array
+                    items:
+                      type: string
+                    example: []
+                  dados:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: Test
+                      email:
+                        type: string
+                        example: test@gmail.com
+                  _links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/1
+                      update:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/1
+                          method:
+                            type: string
+                            example: PUT
+                      delete:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/1
+                          method:
+                            type: string
+                            example: DELETE
+                      status:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://127.0.0.1:4001/user/1
+                          method:
+                            type: string
+                            example: PATCH
+        '404':
+          description: Usuário não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Usuário não encontrado.
+                  erros:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - ID não identificado
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+    delete:
+      tags:
+        - USUARIO
+      summary: Exclui usuário
+      description: Exclui um usuário pelo seu ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário a ser excluído.
+          schema:
+            type: integer
+            minimum: 1
+          example: 2
+      responses:
+        "200":
+          description: Usuário excluído com sucesso.
+          content:
+            application/json:
+              example:
+                status: true
+                message: "Usuario excluido com sucesso."
+                erros: []
+                dados: []
+                _links:
+                  self:
+                    href: "http://127.0.0.1:8000/user/2"
+        "404":
+          description: Usuário não encontrado.
+          content:
+            application/json:
+              example:
+                status: false
+                message: "Usuário não encontrado."
+                erros:
+                  - "ID não identificado"
+                dados: []
+        "422":
+          description: Erro de validação.
+          content:
+            application/json:
+              example:
+                status: false
+                message: "Error Processing Request"
+                erros:
+                  - "Id must be higher then 0."
+                dados: []
+    put:
+      tags:
+        - USUARIO
+      summary: Atualiza usuário
+      description: Atualiza os dados de um usuário pelo seu ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do usuário a ser atualizado.
+          schema:
+            type: integer
+            minimum: 1
+          example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                name:
+                  type: string
+                  example: Teste00
+                email:
+                  type: string
+                  format: email
+                  example: teste00@gmail.com
+            example:
+              name: "Teste00"
+              email: "teste00@gmail.com"
+      responses:
+        "200":
+          description: Usuário atualizado com sucesso.
+          content:
+            application/json:
+              example:
+                status: true
+                message: "Usuario atualizado com sucesso."
+                erros: []
+                dados:
+                  id: "3"
+                  name: "teste"
+                  email: "teste01@teste.com"
+                _links:
+                  self:
+                    href: "http://127.0.0.1:8000/user/3"
+                  get:
+                    href: "http://127.0.0.1:8000/user/3"
+                    method: "GET"
+                  delete:
+                    href: "http://127.0.0.1:8000/user/3"
+                    method: "DELETE"
+                  status:
+                    href: "http://127.0.0.1:8000/user/3"
+                    method: "PATCH"
+        "404":
+          description: Usuário não encontrado.
+          content:
+            application/json:
+              example:
+                status: false
+                message: "Usuário não encontrado."
+                erros:
+                  - "ID não identificado"
+                dados: []
+        "409":
+          description: Conflito de dados (e.g., e-mail já cadastrado).
+          content:
+            application/json:
+              example:
+                status: false
+                message: "Request inválido."
+                erros:
+                  - "Email já cadastrado."
+                dados: []
+        "422":
+          description: Erro de validação.
+          content:
+            application/json:
+              example:
+                status: false
+                message: "Error Processing Request"
+                erros:
+                  - "O campo 'name' é obrigatório."
+                dados: []
+
+
+

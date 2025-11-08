@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: laravel11-skeleton
+    ports:
+      - "8020:9000"
+    volumes:
+      - ./laravel:/var/www/laravel
+    depends_on:
+      - db
+    networks:
+      - laravelSkeleton
+    command: sh -c "composer install && php artisan serve --host=0.0.0.0 --port=9000"
+
+  db:
+    image: mysql:8.0
+    container_name: laravel11-skeleton-db
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: ""
+    ports:
+      - "3306:3306"
+    networks:
+      - laravelSkeleton
+
+networks:
+  laravelSkeleton:
+    driver: bridge
