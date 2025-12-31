@@ -4,12 +4,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\ApiAuthenticate;
 
 //login
 Route::post('/login', [AuthController::class, 'login']);
 
 //Necessário autenticação
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware([ApiAuthenticate::class])->group(function () {
     //Login
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user/self', [AuthController::class, 'consultarLogin']);

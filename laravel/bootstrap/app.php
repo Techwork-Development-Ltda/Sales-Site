@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 use App\Http\Middleware\TraceRequests;
 use App\Http\Middleware\ApiAuthenticate;
+use App\Http\Middleware\WebAuthenticate;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'auth' => ApiAuthenticate::class, // aqui substitui o middleware padrão
+            'api' => ApiAuthenticate::class, // aqui substitui o middleware padrão
+            'web' => WebAuthenticate::class, // aqui substitui o middleware padrão
         ]);
         //$middleware->append(TraceRequests::class);
     })->withProviders([

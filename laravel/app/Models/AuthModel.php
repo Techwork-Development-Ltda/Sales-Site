@@ -26,6 +26,11 @@ class AuthModel extends Authenticatable implements JWTSubject
         'email',
         'password',
     ];
+
+    public function getAuthIdentifierName()
+    {
+        return 'email'; // Este deve ser o nome da coluna do banco
+    }
     
     public function getJWTIdentifier()
     {
