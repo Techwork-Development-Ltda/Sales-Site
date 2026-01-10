@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Exceptions\CredenciaisInvalidasException;
 use App\Requests\LoginRequest;
+use App\Models\AuthModel;
 
 class AuthController extends Controller
 {
@@ -15,13 +16,14 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         LoginRequest::validate($credentials);
 
-        $user = \App\Models\AuthModel::where('email', $credentials['email'])->first();
+        $user = AuthModel::where('email', $credentials['email'])->first();
         $senhaValida = $user ? Hash::check($credentials['password'], $user->password) : false;
 
-        if (!$token = auth('api')->attempt($credentials)) {
+        if (!$senhaValida) {
             throw new CredenciaisInvalidasException('Credênciais invalidas.', ['Email e senha não se verificam']);
         }
 
+        $token = auth('api')->attempt($credentials);
         $user = auth('api')->user();
         $id = $user->id;
 

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\CacheController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\ApiAuthenticate;
 
@@ -21,6 +22,11 @@ Route::middleware([ApiAuthenticate::class])->group(function () {
     Route::put('/user/{id}', [UserController::class, 'putUserById']);
     Route::delete('/user/{id}', [UserController::class, 'deleteUserById']);
     Route::patch('/user/{id}', [UserController::class, 'patchUserById']);
+
+    //cache
+    Route::post('/cache', [CacheController::class, 'store']);
+    Route::get('/cache/{key}', [CacheController::class, 'show']);
+    Route::delete('/cache/{key}', [CacheController::class, 'destroy']);
 });
 
 

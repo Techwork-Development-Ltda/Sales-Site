@@ -26,6 +26,20 @@ services:
     networks:
       - laravelSkeleton
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis-laravel-skeleton
+    command: ["redis-server", "--requirepass", "bananinha123"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "redis-cli -a bananinha123 PING || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - laravelSkeleton
+
 networks:
   laravelSkeleton:
     driver: bridge
