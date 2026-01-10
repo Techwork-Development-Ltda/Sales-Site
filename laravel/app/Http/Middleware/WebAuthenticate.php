@@ -11,8 +11,8 @@ class WebAuthenticate
         // Verifica se o usuário está autenticado pelo guard 'web'
         if (!Auth::guard('web')->check()) {
             // Redireciona para a página de login se o usuário não estiver autenticado
-            return response()->json(['status' => false,'message' => 'NOT AUTHENTICATED.'], 401);
-            //return redirect('/login');
+            //return response()->json(['status' => false,'message' => 'NOT AUTHENTICATED.'], 401);
+            return redirect('/login')->withErrors(['error' => 'Usuario não autenticado!']);
         }
 
         // Permite continuar a requisição

@@ -3,8 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>@yield('title', 'MyLearningThings')</title>
+        <title>@yield('title', 'Laravel Skeleton')</title>
 
     </head>
 
@@ -12,8 +11,8 @@
         <div>
 
             {{-- Header fixo --}}
-            <header class="flex">
-                
+            <header>
+
             </header>
 
             {{-- Conteúdo específico de cada página --}}

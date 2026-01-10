@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'MyLearningThings')
+@section('title', 'Laravel Skeleton')
 
 @section('content')
-
+    
 @endsection

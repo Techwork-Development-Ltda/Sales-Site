@@ -12,11 +12,11 @@ class LoginRequest implements RequestValidationInterface
         $senha = $credentials['password'] ?? '';
 
         if(empty($email)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ['Campo email é obrigatório.']);
+            throw new ParametrosInvalidosException("Error Processing Request", ['Email is required.']);
         }
 
         if(empty($senha)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ['Campo senha é obrigatório.']);
+            throw new ParametrosInvalidosException("Error Processing Request", ['Password is required.']);
         }
     }
 }

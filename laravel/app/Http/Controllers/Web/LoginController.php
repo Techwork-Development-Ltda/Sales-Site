@@ -5,54 +5,48 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\RealizarLoginRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\UserModel;
 
 
 class LoginController extends Controller
 {
-    //
-
     public function loginView() {
         if (Auth::guard('web')->check()) {
-            return redirect()->route('home.home');
+            return redirect()->route('welcome');
         } else {
             return view('login/login');
         }
     }
 
-
     public function realizarLogin(Request $request)
     {
-        // Captura os valores diretamente do Request
         $credentials = [
-            'email' => $request->email ?? '', // Campo login é obrigatório
-            'password' => $request->password ?? '', // Campo senha é obrigatório
+            'email' => $request->email ?? '', 
+            'password' => $request->password ?? '',
         ];
-        RealizarLoginRequest::validate($credentials);
 
-        // Autenticando o usuário com as credenciais
+        LoginRequest::validate($credentials);
+
         if (Auth::guard('web')->attempt([
-            'email' => $credentials['email'], // Campo email no banco
-            'password' => $credentials['password'], // Senha informada
+            'email' => $credentials['email'], 
+            'password' => $credentials['password'], 
         ])) {
-            // Regenera a sessão após autenticação bem-sucedida (segurança)
             $request->session()->regenerate();
+            return redirect()->route('welcome');
 
-            // Obter o usuário atualmente autenticado
-            $user = Auth::guard('web')->user();
-            
-            // Verificar se o usuário é admin (conforme seu método estático)
-            // if (UserModel::isAdmin($user->id)) {
-            //     return redirect()->route('home.home'); // Redireciona para rota home
-            // } else {
-            //     // Usuário não autorizado para o sistema
-            //     return view('login/login', ['erro' => 'Você não tem permissão para acessar.']);
-            // }
-            return redirect()->route('home.home');
         } else {
-            // Caso o login falhe, retorna para a tela de login com mensagem de erro
-            return view('login/login', ['erro' => 'Credenciais incorretas.']);
+            return view('login/login', ['erro' => 'INVALID CREDENTIALS.']);
         }
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('welcome');
     }
 }
