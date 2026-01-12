@@ -8,7 +8,7 @@
 ![Tests](https://img.shields.io/badge/Tests-PHPUnit-3776AB?logo=php&logoColor=white)
 ![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
 ![Redis](https://img.shields.io/badge/Cache-Redis-DC382D?logo=redis&logoColor=white)
-![Swagger](https://img.shields.io/badge/API-Swagger-85EA2D? logo=swagger&logoColor=black)
+![Swagger](https://img.shields.io/badge/API-Swagger-85EA2D?logo=swagger&logoColor=black)
 
 > Esqueleto de projeto laravel utilizando octane + swoole com rotas de autenticação + usuarios bem definidas + testes funcionais e unitarios mockery e provider como exemplo.  
 
