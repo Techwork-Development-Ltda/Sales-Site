@@ -18,7 +18,7 @@ class CacheController extends Controller
     public function store(Request $request)
     {
         $credentials = $request->only(['key', 'value', 'ttl']);
-        $key = trim($credentials['key']) ?? null;
+        $key = isset($credentials['key']) ? trim($credentials['key']) : null;
         $value = $credentials['value'] ?? null;
         $ttl = $credentials['ttl'] ?? 3600;
 

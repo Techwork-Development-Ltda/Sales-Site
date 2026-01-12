@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 use App\Services\UserService;
+use App\Exceptions\NotImplementedException;
 
 use App\Http\Requests\GetUserByIdRequest;
 use App\Http\Requests\InsertUserRequest;
@@ -103,8 +104,8 @@ class UserController extends Controller
     }
 
     public function patchUserById($id, Request $request) : JsonResponse {
-
-        die;
+        //abort(501);
+        throw new NotImplementedException();
     }
 
     public function insertUser(Request $request) : JsonResponse {

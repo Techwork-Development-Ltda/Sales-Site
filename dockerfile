@@ -1,13 +1,32 @@
 FROM php:8.3-cli-bullseye
 
-# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
-    unzip zip curl git libzip-dev libpng-dev libonig-dev libxml2-dev \
-    libcrypt-dev \
-    && docker-php-ext-install pdo pdo_mysql zip
+    ca-certificates \
+    unzip zip curl git \
+    libzip-dev libpng-dev libonig-dev libxml2-dev \
+    build-essential libssl-dev libcurl4-openssl-dev \
+    libpcre3-dev zlib1g-dev libbrotli-dev \
+    && update-ca-certificates
 
-# Instalar Composer
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    zip \
+    pcntl \
+    sockets \
+    posix
+
+# Redis
+RUN pecl install redis \
+    && docker-php-ext-enable redis
+
+# Swoole
+RUN pecl install swoole \
+    && docker-php-ext-enable swoole
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+RUN composer config -g cafile /etc/ssl/certs/ca-certificates.crt
 
-# Definir diretório de trabalho
 WORKDIR /var/www/laravel

@@ -2,13 +2,15 @@
 
 ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
+![Octane](https://img.shields.io/badge/Octane-Enabled-FF2D20?logo=laravel&logoColor=white)
+![Swoole](https://img.shields.io/badge/Swoole-Ready-4479A1?logo=php&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)
 ![Tests](https://img.shields.io/badge/Tests-PHPUnit-3776AB?logo=php&logoColor=white)
 ![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
 ![Redis](https://img.shields.io/badge/Cache-Redis-DC382D?logo=redis&logoColor=white)
-![Swagger](https://img.shields.io/badge/API-Swagger-85EA2D?logo=swagger&logoColor=black)
+![Swagger](https://img.shields.io/badge/API-Swagger-85EA2D? logo=swagger&logoColor=black)
 
-> Esqueleto de projeto laravel com rotas de autenticação + usuarios bem definidas + testes funcionais e unitarios mockery e provider como exemplo.  
+> Esqueleto de projeto laravel utilizando octane + swoole com rotas de autenticação + usuarios bem definidas + testes funcionais e unitarios mockery e provider como exemplo.  
 
 > ⚠️ **IMPORTANTE**: Este é um projeto skeleton/boilerplate configurado para **ambiente de desenvolvimento**. 
 > As configurações de segurança estão simplificadas para facilitar o setup inicial.
@@ -18,10 +20,12 @@
 
 ## 🎯 Sobre este projeto
 
-Este skeleton Laravel fornece uma base sólida para desenvolvimento de APIs RESTful, incluindo:
+Este skeleton Laravel fornece uma base sólida para desenvolvimento de aplicações web e APIs RESTful, incluindo:
 
 - ✅ **Arquitetura em camadas** (Controllers, Services, Models, Requests)
-- ✅ **Autenticação JWT** para APIs stateless
+- ✅ **Autenticação dual** - Session (web) e JWT (API) com guards separados
+- ✅ **Separação de rotas por camada** - Camadas de web e API para organização de projeto
+- ✅ **Alta performance** com Laravel Octane + Swoole
 - ✅ **Testes unitários e de integração** com Mockery e PHPUnit
 - ✅ **Cache distribuído** com Redis
 - ✅ **Documentação automática** com Swagger/OpenAPI
@@ -44,6 +48,8 @@ Este skeleton Laravel fornece uma base sólida para desenvolvimento de APIs REST
    ├─ config/
    ├─ database/
    ├─ routes/
+   ├─ storage/               # Documentação swagger
+   ├─ tests
    ├─ composer.json
    └─ ...
 ```
@@ -145,8 +151,37 @@ php artisan cache:clear
 php artisan config:clear
 
 # Rodar servidor embutido (já configurado no docker-compose)
-php artisan serve --host=0.0.0.0 --port=9000
+php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000
 ```
+
+
+## ▶️ Desenvolvendo com SWOOLE
+> O Swoole executa aplicações PHP em um **runtime persistente escrito em C**, mantendo o código carregado em memória e evitando o bootstrap do Laravel a cada requisição.
+> Isso traz ganhos significativos de performance, porém exige atenção durante o desenvolvimento, pois alterações no código **não são recarregadas automaticamente** por padrão.
+> Se estiver em ambiente de desenvolvimento e precisar refletir alterações no código, utilize **uma das opções abaixo**.
+
+### 1.
+
+Entre no container com:
+
+```bash
+docker exec -it laravel11-skeleton bash
+```
+
+Recarregue os workers do octane.
+
+```bash
+php artisan octane:reload
+```
+
+### 2.
+
+Rode o projeto locamente utilizando --watch (O docker não funciona o --watch corretamente, depende de eventos de filesystem).
+
+```bash
+php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000 --watch
+```
+
 
 ---
 
