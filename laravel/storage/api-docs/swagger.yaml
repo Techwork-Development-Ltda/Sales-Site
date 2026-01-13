@@ -656,5 +656,192 @@ paths:
                   - "O campo 'name' é obrigatório."
                 dados: []
 
+  #Cache
+  /api/cache:
+    post:
+      tags:
+        - CACHE
+      summary: Armazena um valor em cache.
+      description: Armazena um valor em cache com uma chave específica e tempo de expiração.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                  example: sample_key
+                value:
+                  type: string
+                  example: sample_value
+                ttl:
+                  type: integer
+                  description: Tempo de vida em segundos
+                  example: 3600
+      responses:
+        '200':
+          description: Cache armazenado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Cache armazenado com sucesso.
+                  erros:
+                    type: array
+                    items: {}
+                    example: []
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+        '422':
+          description: Erro de validação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error Processing Request
+                  erros:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - "O campo 'key' é obrigatório."
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+
+  /api/cache/{key}:
+    get:
+      tags:
+        - CACHE
+      summary: Recupera um valor do cache.
+      description: Recupera o valor armazenado em cache para uma chave específica.
+      parameters:
+        - name: key
+          in: path
+          required: true
+          description: Chave do cache a ser recuperado.
+          schema:
+            type: string
+            example: sample_key
+      responses:
+        '200':
+          description: Cache recuperado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Cache recuperado com sucesso.
+                  erros:
+                    type: array
+                    items: {}
+                    example: []
+                  dados:
+                    type: array
+                    items: {}
+                    example:
+                      key: sample_key
+                      value: sample_value
+        '404':
+          description: Cache não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Key não encontrada no cache.
+                  erros:
+                    type: array
+                    items: {}
+                    example: []
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+    delete:
+      tags:
+        - CACHE
+      summary: Remove um valor do cache.
+      description: Remove o valor armazenado em cache para uma chave específica.
+      parameters:
+        - name: key
+          in: path
+          required: true
+          description: Chave do cache a ser removido.
+          schema:
+            type: string
+            example: sample_key
+      responses:
+        '200':
+          description: Cache removido com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Cache removido com sucesso.
+                  erros:
+                    type: array
+                    items: {}
+                    example: []
+                  dados:
+                    type: array
+                    items: {}
+                    example:
+                      deleted_count: 1
+        '404':
+          description: Cache não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Key não encontrada no cache.
+                  erros:
+                    type: array
+                    items: {}
+                    example: []
+                  dados:
+                    type: array
+                    items: {}
+                    example: []
+
 
 
