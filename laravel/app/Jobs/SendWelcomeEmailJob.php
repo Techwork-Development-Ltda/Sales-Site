@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
 use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class SendWelcomeEmailJob implements ShouldQueue
@@ -18,7 +19,9 @@ class SendWelcomeEmailJob implements ShouldQueue
     public function __construct(
         private string $email,
         private string $name
-    ) {}
+    ) {
+        $this->onQueue('emails');
+    }
 
     public function backoff(): array
     {
@@ -30,7 +33,18 @@ class SendWelcomeEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->email)
-            ->send(new WelcomeMail($this->name));
+
+        try {
+            Mail::to($this->email)
+                ->send(new WelcomeMail($this->name));
+        } catch (\Throwable $e) {
+            Log::error('Erro ao enviar email', [
+                'job' => self::class,
+                'error' => $e->getMessage(),
+            ]);
+
+            throw $e;
+        }
+        
     }
 }

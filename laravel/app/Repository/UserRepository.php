@@ -72,7 +72,7 @@ class UserRepository implements UserRepositoryInterface
             throw new ErroDePersistenciaException();
         }  
 
-        //event(new UserRegistered($id,$data['email'], $data['name']));
+        event(new UserRegistered($id, $data['email'], $data['name']));
         
         return [
             'id' => $id,
