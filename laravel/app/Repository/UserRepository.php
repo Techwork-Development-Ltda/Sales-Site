@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 use App\Repository\Contracts\UserRepositoryInterface;
 
+use App\Events\UserRegistered;
+
 class UserRepository implements UserRepositoryInterface
 {
     public function getUserById(int $id) : array {
@@ -70,6 +72,8 @@ class UserRepository implements UserRepositoryInterface
             throw new ErroDePersistenciaException();
         }  
 
+        //event(new UserRegistered($id,$data['email'], $data['name']));
+        
         return [
             'id' => $id,
             'name' => $data['name'],

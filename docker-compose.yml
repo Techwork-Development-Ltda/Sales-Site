@@ -15,6 +15,18 @@ services:
     #command: sh -c "composer install && php artisan serve --host=0.0.0.0 --port=9000"
     command: sh -c "composer install && php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000"
 
+  # queue:
+  #   build: .
+  #   container_name: laravel11-queue
+  #   volumes:
+  #     - ./laravel:/var/www/laravel
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - laravelSkeleton
+  #   command: sh -c "
+  #     php artisan queue:work
+
   db:
     image: mysql:8.0
     container_name: laravel11-skeleton-db
