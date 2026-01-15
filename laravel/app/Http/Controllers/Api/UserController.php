@@ -24,16 +24,17 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function getUserById($id, Request $request) : JsonResponse {
+    public function getUserById(Request $request, $id) : JsonResponse 
+    {
         $request->merge(['id' => $id]);
         $credentials = $request->only(['id']);
         GetUserByIdRequest::validate($credentials);
         $response = $this->userService->getUserById($id);
         return response()->json([
             'status' => true,
-            'message' => 'Usuario encontrado com sucesso.',
-            'erros' => [],
-            'dados' => $response,
+            'message' => 'User fetched successfully.',
+            'errors' => [],
+            'data' => $response,
             '_links' => [
                 'self' => [
                     'href' => url("user/$id"),
@@ -54,7 +55,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function putUserById($id, Request $request) : JsonResponse {
+    public function putUserById(Request $request, $id) : JsonResponse 
+    {
         $request->merge(['id' => $id]);
         $credentials = $request->only(['id', 'name', 'email']);
         PutUserByIdRequest::validate($credentials);
@@ -62,9 +64,9 @@ class UserController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Usuario atualizado com sucesso.',
-            'erros' => [],
-            'dados' => $response,
+            'message' => 'User updated successfully.',
+            'errors' => [],
+            'data' => $response,
             '_links' => [
                 'self' => [
                     'href' => url("user/$id"),
@@ -85,16 +87,17 @@ class UserController extends Controller
         ]);
     }
 
-    public function deleteUserById($id, Request $request) : JsonResponse {
+    public function deleteUserById(Request $request, $id) : JsonResponse 
+    {
         $request->merge(['id' => $id]);
         $credentials = $request->only(['id',]);
         DeleteUserByIdRequest::validate($credentials);
         $response = $this->userService->deleteUserById($credentials['id']);
         return response()->json([
             'status' => $response,
-            'message' => 'Usuario excluido com sucesso.',
-            'erros' => [],
-            'dados' => [],
+            'message' => 'User deleted successfully.',
+            'errors' => [],
+            'data' => [],
             '_links' => [
                 'self' => [
                     'href' => url("user/$id"),
@@ -103,20 +106,21 @@ class UserController extends Controller
         ]);
     }
 
-    public function patchUserById($id, Request $request) : JsonResponse {
-        //abort(501);
+    public function patchUserById(Request $request, $id) : JsonResponse 
+    {
         throw new NotImplementedException();
     }
 
-    public function insertUser(Request $request) : JsonResponse {
+    public function insertUser(Request $request) : JsonResponse 
+    {
         $credentials = $request->only(['name', 'email', 'password']);
         InsertUserRequest::validate($credentials);
         $response = $this->userService->insertUser($credentials);
         return response()->json([
             'status' => true,
-            'message' => 'Usuario adicionado com sucesso.',
-            'erros' => [],
-            'dados' => $response,
+            'message' => 'User added successfully.',
+            'errors' => [],
+            'data' => $response,
             '_links' => [
                 'self' => [
                     'href' => url("user/".$response['id']),

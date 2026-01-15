@@ -6,12 +6,12 @@ use Exception;
 
 class RedisConnectionException extends Exception
 {
-    protected $erros;
+    protected $errors;
 
-    public function __construct(string $message = 'Falha ao conectar com o Redis. ', array $erros = [])
+    public function __construct(string $message = 'Error connecting to Redis', array $errors = [])
     {
         parent::__construct($message);
-        $this->erros = $erros;
+        $this->errors = $errors;
     }
 
     public function render($request)
@@ -19,8 +19,8 @@ class RedisConnectionException extends Exception
         return response()->json([
             'status' => false,
             'message' => $this->getMessage(),
-            'erros' => $this->erros,
-            'dados' => []
-        ], 503); // 503 Service Unavailable
+            'errors' => $this->errors,
+            'data' => []
+        ], 503);
     }
 }

@@ -5,14 +5,14 @@ use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
-    //
 
-    public function __construct() {
+    public function __construct() 
+    {
         
     }
 
-    public function homeView() {
-        //return view('home');
+    public function homeView() 
+    {
         return view('welcome');
     }
 }

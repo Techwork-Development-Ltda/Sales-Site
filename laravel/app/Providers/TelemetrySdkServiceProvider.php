@@ -23,7 +23,7 @@ class TelemetrySdkServiceProvider extends ServiceProvider
         $exporter  = new OtlpSpanExporter($transport);
 
         $tracerProvider = (new TracerProviderBuilder())
-            ->addSpanProcessor(new SimpleSpanProcessor($exporter)) // depois podemos trocar por Batch
+            ->addSpanProcessor(new SimpleSpanProcessor($exporter))
             ->build();
 
         Sdk::builder()

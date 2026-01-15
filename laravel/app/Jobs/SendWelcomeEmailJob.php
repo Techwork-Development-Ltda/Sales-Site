@@ -28,9 +28,6 @@ class SendWelcomeEmailJob implements ShouldQueue
         return [10, 30, 60];
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
 
@@ -38,7 +35,7 @@ class SendWelcomeEmailJob implements ShouldQueue
             Mail::to($this->email)
                 ->send(new WelcomeMail($this->name));
         } catch (\Throwable $e) {
-            Log::error('Erro ao enviar email', [
+            Log::error('Error sending email', [
                 'job' => self::class,
                 'error' => $e->getMessage(),
             ]);

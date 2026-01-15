@@ -14,9 +14,9 @@ paths:
   /api/login:
     post:
       tags:
-        - AUTENTICAÇÃO
-      summary: Realiza o login do usuário
-      description: Autenticação de usuários usando email e senha.
+        - AUTHENTICATION
+      summary: Login attempt
+      description: Authenticates the user and generates a JWT token for accessing protected API resources.
       requestBody:
         required: true
         content:
@@ -25,7 +25,7 @@ paths:
               type: object
               required:
                 - email
-                - senha
+                - password
               properties:
                 email:
                   type: string
@@ -37,7 +37,7 @@ paths:
                   example: "123456"
       responses:
         '200':
-          description: Token gerado com sucesso.
+          description: Token generated successfully.
           content:
             application/json:
               schema:
@@ -48,12 +48,12 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Token gerado com sucesso.
-                  erros:
+                    example: Token generated successfully.
+                  errors:
                     type: array
                     items: {}
                     example: []
-                  dados:
+                  data:
                     type: object
                     properties:
                       token:
@@ -104,7 +104,7 @@ paths:
                             type: string
                             example: GET
         '401':
-          description: Credenciais inválidas
+          description: Invalid credentials
           content:
             application/json:
               schema:
@@ -115,19 +115,19 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: "Credênciais invalidas."
-                  erros:
+                    example: "Invalid credentials."
+                  errors:
                     type: array
                     items:
                       type: string
                     example:
-                      - "Email e senha não se verificam"
-                  dados:
+                      - "Email and password do not match"
+                  data:
                     type: array
                     items: {}
                     example: []
         '422':
-          description: Erro ao validar campos
+          description: Error validating fields
           content:
             application/json:
               schema:
@@ -139,13 +139,13 @@ paths:
                   message:
                     type: string
                     example: "Error Processing Request"
-                  erros:
+                  errors:
                     type: array
                     items:
                       type: string
                     example:
-                      - "Campo email é obrigatório."
-                  dados:
+                      - "The email field is required."
+                  data:
                     type: array
                     items: {}
                     example: []
@@ -153,14 +153,14 @@ paths:
   /api/logout:
     post:
       tags:
-        - AUTENTICAÇÃO
-      summary: Expira o seu token atual, encerrando sessão.
-      description: Encerra a sessão do usuário autenticado, invalidando o token JWT atual.
+        - AUTHENTICATION
+      summary: Expires your current token, ending the session.
+      description: Ends the authenticated user's session, invalidating the current JWT token.
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Logout efetuado com sucesso.
+          description: Logout successful.
           content:
             application/json:
               schema:
@@ -171,12 +171,12 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Logout efetuado
-                  erros:
+                    example: Logout successful.
+                  errors:
                     type: array
                     items: {}
                     example: []
-                  dados:
+                  data:
                     type: array
                     items: {}
                     example: []
@@ -205,14 +205,14 @@ paths:
   /api/user/self:
     get:
       tags:
-        - AUTENTICAÇÃO
-      summary: Recupera dados do usuário autenticado
-      description: Recupera dados do usuário pelo token gerado.
+        - AUTHENTICATION
+      summary: Retrieves authenticated user's data
+      description: Retrieves user data using the generated token.
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Usuário encontrado com sucesso.
+          description: User found successfully.
           content:
             application/json:
               schema:
@@ -223,12 +223,12 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: "Usuario encontrado com sucesso."
-                  erros:
+                    example: "User found successfully."
+                  errors:
                     type: array
                     items: {}
                     example: []
-                  dados:
+                  data:
                     type: object
                     properties:
                       id:
@@ -263,13 +263,13 @@ paths:
                             type: string
                             example: POST
 
-  #Usuario
+  #User
   /api/v1/user:
     post:
       tags:
-        - USUARIO
-      summary: Cadastro de usuario.
-      description: Cadastra um novo usuário no sistema.
+        - USER
+      summary: User registration.
+      description: Registers a new user in the system.
       security:
         - bearerAuth: []
       requestBody:
@@ -290,7 +290,7 @@ paths:
                   example: Abc123!
       responses:
         '200':
-          description: Usuário adicionado com sucesso.
+          description: User added successfully.
           content:
             application/json:
               schema:
@@ -301,13 +301,13 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Usuario adicionado com sucesso.
-                  erros:
+                    example: User added successfully.
+                  errors:
                     type: array
                     items:
                       type: string
                     example: []
-                  dados:
+                  data:
                     type: object
                     properties:
                       id:
@@ -365,7 +365,7 @@ paths:
                             type: string
                             example: PATCH
         '409':
-          description: Duplicidade identificada.
+          description: Duplicate detected.
           content:
             application/json:
               schema:
@@ -376,19 +376,19 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: Duplicidade identificada.
-                  erros:
+                    example: Duplicate detected.
+                  errors:
                     type: array
                     items:
                       type: string
                     example:
-                      - Email já cadastrado.
-                  dados:
+                      - Email already registered.
+                  data:
                     type: array
                     items: {}
                     example: []
         '422':
-          description: Erro de validação.
+          description: Validation error.
           content:
             application/json:
               schema:
@@ -400,13 +400,13 @@ paths:
                   message:
                     type: string
                     example: Error Processing Request
-                  erros:
+                  errors:
                     type: array
                     items:
                       type: string
                     example:
-                      - "O campo 'name' é obrigatório."
-                  dados:
+                      - "The 'name' field is required."
+                  data:
                     type: array
                     items: {}
                     example: []
@@ -414,22 +414,22 @@ paths:
   /api/v1/user/{id}:
     get:
       tags:
-        - USUARIO
-      summary: Consulta usuario.
-      description: Consulta um usuário pelo ID.
+        - USER
+      summary: Get user.
+      description: Get a user by ID.
       security:
         - bearerAuth: []
       parameters:
         - name: id
           in: path
           required: true
-          description: ID do usuário
+          description: User ID to be retrieved.
           schema:
             type: integer
             example: 1
       responses:
         '200':
-          description: Usuário encontrado com sucesso.
+          description: User found successfully.
           content:
             application/json:
               schema:
@@ -440,13 +440,13 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Usuario encontrado com sucesso.
-                  erros:
+                    example: User found successfully.
+                  errors:
                     type: array
                     items:
                       type: string
                     example: []
-                  dados:
+                  data:
                     type: object
                     properties:
                       id:
@@ -495,7 +495,7 @@ paths:
                             type: string
                             example: PATCH
         '404':
-          description: Usuário não encontrado.
+          description: User not found.
           content:
             application/json:
               schema:
@@ -506,78 +506,78 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: Usuário não encontrado.
-                  erros:
+                    example: User not found.
+                  errors:
                     type: array
                     items:
                       type: string
                     example:
-                      - ID não identificado
-                  dados:
+                      - ID not identified
+                  data:
                     type: array
                     items: {}
                     example: []
     delete:
       tags:
-        - USUARIO
-      summary: Exclui usuário
-      description: Exclui um usuário pelo seu ID.
+        - USER
+      summary: Delete user
+      description: Delete a user by their ID.
       security:
         - bearerAuth: []
       parameters:
         - name: id
           in: path
           required: true
-          description: ID do usuário a ser excluído.
+          description: User ID to be deleted.
           schema:
             type: integer
             minimum: 1
           example: 2
       responses:
         "200":
-          description: Usuário excluído com sucesso.
+          description: User deleted successfully.
           content:
             application/json:
               example:
                 status: true
-                message: "Usuario excluido com sucesso."
-                erros: []
-                dados: []
+                message: "User deleted successfully."
+                errors: []
+                data: []
                 _links:
                   self:
                     href: "http://127.0.0.1:8000/user/2"
         "404":
-          description: Usuário não encontrado.
+          description: User not found.
           content:
             application/json:
               example:
                 status: false
-                message: "Usuário não encontrado."
-                erros:
-                  - "ID não identificado"
-                dados: []
+                message: "User not found."
+                errors:
+                  - "ID not identified"
+                data: []
         "422":
-          description: Erro de validação.
+          description: Validation error.
           content:
             application/json:
               example:
                 status: false
                 message: "Error Processing Request"
-                erros:
-                  - "Id must be higher then 0."
-                dados: []
+                errors:
+                  - "Id must be higher than 0."
+                data: []
     put:
       tags:
-        - USUARIO
-      summary: Atualiza usuário
-      description: Atualiza os dados de um usuário pelo seu ID.
+        - USER
+      summary: Update user.
+      description: Update a user's data by their ID.
       security:
         - bearerAuth: []
       parameters:
         - name: id
           in: path
           required: true
-          description: ID do usuário a ser atualizado.
+          description: User ID to be updated.
           schema:
             type: integer
             minimum: 1
@@ -602,14 +602,14 @@ paths:
               email: "teste00@gmail.com"
       responses:
         "200":
-          description: Usuário atualizado com sucesso.
+          description: User updated successfully.
           content:
             application/json:
               example:
                 status: true
-                message: "Usuario atualizado com sucesso."
-                erros: []
-                dados:
+                message: "User updated successfully."
+                errors: []
+                data:
                   id: "3"
                   name: "teste"
                   email: "teste01@teste.com"
@@ -626,43 +626,43 @@ paths:
                     href: "http://127.0.0.1:8000/user/3"
                     method: "PATCH"
         "404":
-          description: Usuário não encontrado.
+          description: User not found.
           content:
             application/json:
               example:
                 status: false
-                message: "Usuário não encontrado."
-                erros:
-                  - "ID não identificado"
-                dados: []
+                message: "User not found."
+                errors:
+                  - "ID not identified"
+                data: []
         "409":
-          description: Conflito de dados (e.g., e-mail já cadastrado).
+          description: Data conflict (e.g., email already registered).
           content:
             application/json:
               example:
                 status: false
-                message: "Request inválido."
-                erros:
-                  - "Email já cadastrado."
-                dados: []
+                message: "Invalid request."
+                errors:
+                  - "Email already registered."
+                data: []
         "422":
-          description: Erro de validação.
+          description: Validation error.
           content:
             application/json:
               example:
                 status: false
                 message: "Error Processing Request"
-                erros:
-                  - "O campo 'name' é obrigatório."
-                dados: []
+                errors:
+                  - "The 'name' field is required."
+                data: []
 
   #Cache
   /api/cache:
     post:
       tags:
         - CACHE
-      summary: Armazena um valor em cache.
-      description: Armazena um valor em cache com uma chave específica e tempo de expiração.
+      summary: Store a value in cache.
+      description: Store a value in cache with a specific key and expiration time.
       requestBody:
         required: true
         content:
@@ -678,11 +678,11 @@ paths:
                   example: sample_value
                 ttl:
                   type: integer
-                  description: Tempo de vida em segundos
+                  description: Time in seconds for the cache to expire.
                   example: 3600
       responses:
         '200':
-          description: Cache armazenado com sucesso.
+          description: Cache stored successfully.
           content:
             application/json:
               schema:
@@ -693,17 +693,17 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Cache armazenado com sucesso.
-                  erros:
+                    example: Cache stored successfully.
+                  errors:
                     type: array
                     items: {}
                     example: []
-                  dados:
+                  data:
                     type: array
                     items: {}
                     example: []
         '422':
-          description: Erro de validação.
+          description: Validation error.
           content:
             application/json:
               schema:
@@ -715,13 +715,13 @@ paths:
                   message:
                     type: string
                     example: Error Processing Request
-                  erros:
+                  errors:
                     type: array
                     items:
                       type: string
                     example:
-                      - "O campo 'key' é obrigatório."
-                  dados:
+                      - "The 'key' field is required."
+                  data:
                     type: array
                     items: {}
                     example: []
@@ -730,19 +730,19 @@ paths:
     get:
       tags:
         - CACHE
-      summary: Recupera um valor do cache.
-      description: Recupera o valor armazenado em cache para uma chave específica.
+      summary: Retrieve a value from cache.
+      description: Retrieve the value stored in cache for a specific key.
       parameters:
         - name: key
           in: path
           required: true
-          description: Chave do cache a ser recuperado.
+          description: Cache key to be retrieved.
           schema:
             type: string
             example: sample_key
       responses:
         '200':
-          description: Cache recuperado com sucesso.
+          description: Cache retrieved successfully.
           content:
             application/json:
               schema:
@@ -753,19 +753,19 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Cache recuperado com sucesso.
-                  erros:
+                    example: Cache retrieved successfully.
+                  errors:
                     type: array
                     items: {}
                     example: []
-                  dados:
+                  data:
                     type: array
                     items: {}
                     example:
                       key: sample_key
                       value: sample_value
         '404':
-          description: Cache não encontrado.
+          description: Cache not found.
           content:
             application/json:
               schema:
@@ -776,31 +776,31 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: Key não encontrada no cache.
-                  erros:
+                    example: Key not found in cache.
+                  errors:
                     type: array
                     items: {}
                     example: []
-                  dados:
+                  data:
                     type: array
                     items: {}
                     example: []
     delete:
       tags:
         - CACHE
-      summary: Remove um valor do cache.
-      description: Remove o valor armazenado em cache para uma chave específica.
+      summary: Remove a value from cache.
+      description: Remove the value stored in cache for a specific key.
       parameters:
         - name: key
           in: path
           required: true
-          description: Chave do cache a ser removido.
+          description: Cache key to be removed.
           schema:
             type: string
             example: sample_key
       responses:
         '200':
-          description: Cache removido com sucesso.
+          description: Cache removed successfully.
           content:
             application/json:
               schema:
@@ -811,18 +811,18 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: Cache removido com sucesso.
-                  erros:
+                    example: Cache removed successfully.
+                  errors:
                     type: array
                     items: {}
                     example: []
-                  dados:
+                  data:
                     type: array
                     items: {}
                     example:
                       deleted_count: 1
         '404':
-          description: Cache não encontrado.
+          description: Cache not found.
           content:
             application/json:
               schema:
@@ -833,12 +833,12 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: Key não encontrada no cache.
-                  erros:
+                    example: Key not found in cache.
+                  errors:
                     type: array
                     items: {}
                     example: []
-                  dados:
+                  data:
                     type: array
                     items: {}
                     example: []

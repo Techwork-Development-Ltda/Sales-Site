@@ -2,30 +2,31 @@
 
 namespace App\Http\Requests;
 use App\Contracts\RequestValidationInterface;
-use App\Exceptions\ParametrosInvalidosException;
+use App\Exceptions\InvalidParametersException;
 use App\Helpers\Validator;
 
 class PutUserByIdRequest implements RequestValidationInterface
 {
-    public static function validate(array $credentials) : void {
+    public static function validate(array $credentials) : void 
+    {
         $id = $credentials['id'] ?? '';
         $name = $credentials['name'] ?? '';
         $email = $credentials['email'] ?? '';
         
         if(empty($name)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ["O campo 'name' é obrigatório."]);
+            throw new InvalidParametersException("Error Processing Request", ["Invalid name parameter"]);
         }
 
         if(empty($email)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ["O campo 'email' é obrigatório."]);
+            throw new InvalidParametersException("Error Processing Request", ["The 'email' field is required."]);
         }
 
         if(!Validator::isValidEmail($email)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ["Email inválido."]);
+            throw new InvalidParametersException("Error Processing Request", ["Invalid email parameter"]);
         }
 
         if(!Validator::positiveInt($id)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ["ID inválido."]);
+            throw new InvalidParametersException("Error Processing Request", ["IInvalid id parameter"]);
         }
     }
 }

@@ -9,18 +9,14 @@
 
     <body>
         <div>
-
-            {{-- Header fixo --}}
             <header>
 
             </header>
 
-            {{-- Conteúdo específico de cada página --}}
             <main>
                 @yield('content')
             </main>
 
-            {{-- Footer fixo --}}
             <footer>
 
             </footer>

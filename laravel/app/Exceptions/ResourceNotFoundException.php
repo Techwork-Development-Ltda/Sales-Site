@@ -4,11 +4,12 @@ namespace App\Exceptions;
 
 use Exception;
 
-class RedisSocketException extends Exception
+class ResourceNotFoundException extends Exception
 {
+
     protected $errors;
 
-    public function __construct(string $message = 'Error in Redis socket.', array $errors = [])
+    public function __construct(string $message = 'No results found for your query.', array $errors = [])
     {
         parent::__construct($message);
         $this->errors = $errors;
@@ -21,6 +22,6 @@ class RedisSocketException extends Exception
             'message' => $this->getMessage(),
             'errors' => $this->errors,
             'data' => []
-        ], 500);
+        ], 404);
     }
 }

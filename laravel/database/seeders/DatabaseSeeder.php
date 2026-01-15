@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,10 +11,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //Adiciona usuario padrão
-        //Administrador
-        //123456
-        $this->call(UserSeeder::class);
-        
+        $this->call(UserSeeder::class); 
     }
 }

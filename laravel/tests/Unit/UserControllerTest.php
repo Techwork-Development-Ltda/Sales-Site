@@ -35,7 +35,7 @@ class UserControllerTest extends TestCase
 
     public function test_service_getUserById_throws_when_not_found(): void
     {
-        $this->expectException(\App\Exceptions\RecursoNaoEncontradoException::class);
+        $this->expectException(\App\Exceptions\ResourceNotFoundException::class);
 
         $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
         $userRepositoryMock->shouldReceive('getUserById')->once()->with(1)->andReturn([]);
@@ -76,7 +76,7 @@ class UserControllerTest extends TestCase
 
     public function test_service_insertUser_throws_when_email_exists(): void
     {
-        $this->expectException(\App\Exceptions\RecursoDuplicadoException::class);
+        $this->expectException(\App\Exceptions\DuplicatedValueException::class);
 
         $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
         $userRepositoryMock->shouldReceive('getUserByEmail')->once()->with('jane@example.test')->andReturn([
@@ -123,7 +123,7 @@ class UserControllerTest extends TestCase
 
     public function test_service_updateUser_throws_when_not_found(): void
     {
-        $this->expectException(\App\Exceptions\RecursoNaoEncontradoException::class);
+        $this->expectException(\App\Exceptions\ResourceNotFoundException::class);
 
         $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
         $userRepositoryMock->shouldReceive('getUserById')->once()->with(1)->andReturn([]);
@@ -141,7 +141,7 @@ class UserControllerTest extends TestCase
 
     public function test_service_updateUser_throws_when_new_email_already_in_use(): void 
     {
-        $this->expectException(\App\Exceptions\RecursoDuplicadoException::class);
+        $this->expectException(\App\Exceptions\DuplicatedValueException::class);
 
         $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
         $userRepositoryMock->shouldReceive('getUserById')->once()->with(1)->andReturn([

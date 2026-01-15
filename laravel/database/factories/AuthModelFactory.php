@@ -13,7 +13,7 @@ class AuthModelFactory extends Factory
 
     public function definition()
     {
-        $password = bcrypt('123456'); // senha padrão para testes
+        $password = bcrypt('123456');
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),

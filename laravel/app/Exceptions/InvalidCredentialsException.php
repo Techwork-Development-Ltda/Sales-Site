@@ -4,14 +4,14 @@ namespace App\Exceptions;
 
 use Exception;
 
-class CredenciaisInvalidasException extends Exception
+class InvalidCredentialsException extends Exception
 {
-    protected $erros;
+    protected $errors;
 
-    public function __construct(string $message = 'Credênciais invalidas.', array $erros = [])
+    public function __construct(string $message = 'Invalid credentials.', array $errors = [])
     {
         parent::__construct($message);
-        $this->erros = $erros;
+        $this->errors = $errors;
     }
 
     public function render($request)
@@ -19,8 +19,8 @@ class CredenciaisInvalidasException extends Exception
         return response()->json([
             'status' => false,
             'message' => $this->getMessage(),
-            'erros' => $this->erros,
-            'dados' => []
+            'errors' => $this->errors,
+            'data' => []
         ], 401); 
     }
 }

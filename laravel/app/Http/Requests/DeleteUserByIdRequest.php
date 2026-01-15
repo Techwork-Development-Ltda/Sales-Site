@@ -2,16 +2,17 @@
 
 namespace App\Http\Requests;
 use App\Contracts\RequestValidationInterface;
-use App\Exceptions\ParametrosInvalidosException;
+use App\Exceptions\InvalidParametersException;
 use App\Helpers\Validator;
 
 class DeleteUserByIdRequest implements RequestValidationInterface
 {
-    public static function validate(array $credentials) : void {
+    public static function validate(array $credentials) : void 
+    {
         $id = $credentials['id'] ?? 0;
 
         if(!Validator::positiveInt($id)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ['Id must be higher then 0.']);
+            throw new InvalidParametersException("Error Processing Request", ['Invalid id parameter'], 400);
         }
     }
 }

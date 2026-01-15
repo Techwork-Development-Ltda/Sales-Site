@@ -2,34 +2,35 @@
 
 namespace App\Http\Requests;
 use App\Contracts\RequestValidationInterface;
-use App\Exceptions\ParametrosInvalidosException;
+use App\Exceptions\InvalidParametersException;
 use App\Helpers\Validator;
 
 class InsertUserRequest implements RequestValidationInterface
 {
-    public static function validate(array $credentials) : void {
+    public static function validate(array $credentials) : void 
+    {
         $name = $credentials['name'] ?? '';
         $email = $credentials['email'] ?? '';
         $password = $credentials['password'] ?? '';
 
         if(empty($name)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ["O campo 'name' é obrigatório."]);
+            throw new InvalidParametersException("Error Processing Request", ["Invalid name parameter"], 400);
         }
 
         if(empty($email)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ["O campo 'email' é obrigatório."]);
+            throw new InvalidParametersException("Error Processing Request", ["The 'email' field is required."], 400);
         }
 
         if(!Validator::isValidEmail($email)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ["Email inválido."]);
+            throw new InvalidParametersException("Error Processing Request", ["Invalid email parameter"], 400);
         }
 
         if(empty($password)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ["O campo 'password' é obrigatório."]);
+            throw new InvalidParametersException("Error Processing Request", ["The 'password' field is required."], 400);
         }
 
         if(!Validator::isValidPassword($password)) {
-            throw new ParametrosInvalidosException("Error Processing Request", ["A senha deve conter ao menos 1 letra maiúscula, 1 letra minúscula, 1 número, 1 caractere especial e ter entre 6 e 16 caracteres."]);
+            throw new InvalidParametersException("Error Processing Request", ["The password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, 1 special character, and be between 6 and 16 characters."], 400);
         }
     }
 }

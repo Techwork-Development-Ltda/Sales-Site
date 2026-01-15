@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-use App\Exceptions\CredenciaisInvalidasException;
+use App\Exceptions\InvalidCredentialsException;
 use App\Http\Requests\LoginRequest;
 use App\Models\AuthModel;
 
@@ -17,21 +17,20 @@ class AuthController extends Controller
         LoginRequest::validate($credentials);
 
         $user = AuthModel::where('email', $credentials['email'])->first();
-        $senhaValida = $user ? Hash::check($credentials['password'], $user->password) : false;
+        $validPass = $user ? Hash::check($credentials['password'], $user->password) : false;
 
-        if (!$senhaValida) {
-            throw new CredenciaisInvalidasException('Credênciais invalidas.', ['Email e senha não se verificam']);
+        if (!$validPass) {
+            throw new InvalidCredentialsException('Credênciais invalidas.', ['Email e senha não se verificam']);
         }
 
         $token = auth('api')->attempt($credentials);
         $user = auth('api')->user();
-        $id = $user->id;
 
         return response()->json([
             'status' => true,
             'message' => 'Token gerado com sucesso.',
-            'erros' => [],
-            'dados' => [
+            'errors' => [],
+            'data' => [
                 'token' => $token,
                 'user' => $user
             ],
@@ -57,8 +56,8 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Logout efetuado',
-            'erros' => [],
-            'dados' => [],
+            'errors' => [],
+            'data' => [],
             '_links' => [
                 'self' => [
                     'href' => url("/logout"),
@@ -73,13 +72,13 @@ class AuthController extends Controller
         ]);
     }
 
-    public function consultarLogin()
+    public function checkAuth()
     {
         return response()->json([
             'status' => true,
-            'message' => 'Usuario encontrado com sucesso.',
-            'erros' => [],
-            'dados' => auth('api')->user(),
+            'message' => 'Usuario está autenticado.',
+            'errors' => [],
+            'data' => auth('api')->user(),
             '_links' => [
                 'self' => [
                     'href' => url("/user/self"),

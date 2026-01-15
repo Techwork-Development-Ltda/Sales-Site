@@ -2,64 +2,67 @@
 
 namespace App\Repository;
 
-use App\Exceptions\ErroDePersistenciaException;
+use App\Exceptions\PersistenceErrorException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 use App\Repository\Contracts\UserRepositoryInterface;
-
 use App\Events\UserRegistered;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function getUserById(int $id) : array {
-        $retorno = [];
-        $usuario = [];
+    public function getUserById(int $id) : array 
+    {
+        $response = [];
+        $user = [];
 
         try {
-            $usuario = DB::table('users')
+            $user = DB::table('users')
                 ->select('id', 'name', 'email')
                 ->where('id', $id)
                 ->first();
         } catch (\Throwable $th) {
-            throw new ErroDePersistenciaException();
+            throw new PersistenceErrorException();
         }
         
-        if (!empty($usuario)) {
-            $retorno = [
-                'id' => $usuario->id,
-                'name' => $usuario->name,
-                'email' => $usuario->email
+        if (!empty($user)) {
+            $response = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email
             ];
         }
 
-        return $retorno;
+        return $response;
     }
 
-    public function getUserByEmail(string $email) : array {
-        $retorno = [];
-        $usuario = [];
+    public function getUserByEmail(string $email) : array 
+    {
+        $response = [];
+        $user = [];
+
         try {
-            $usuario = DB::table('users')
+            $user = DB::table('users')
                 ->select('id', 'name', 'email')
                 ->where('email', $email)
                 ->first();
         } catch (\Throwable $th) {
-            throw new ErroDePersistenciaException();
+            throw new PersistenceErrorException();
         }
 
-        if (!empty($usuario)) {
-            $retorno = [
-                'id' => $usuario->id,
-                'name' => $usuario->name,
-                'email' => $usuario->email
+        if (!empty($user)) {
+            $response = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email
             ];
         }
 
-        return $retorno;
+        return $response;
     }
 
-    public function insertUser(array $data) : array {
+    public function insertUser(array $data) : array 
+    {
         try {
             $id = DB::table('users')->insertGetId([
                 'name' => $data['name'],
@@ -69,7 +72,7 @@ class UserRepository implements UserRepositoryInterface
                 'updated_at' => now()
             ]);
         } catch (\Throwable $th) {
-            throw new ErroDePersistenciaException();
+            throw new PersistenceErrorException();
         }  
 
         event(new UserRegistered($id, $data['email'], $data['name']));
@@ -81,32 +84,34 @@ class UserRepository implements UserRepositoryInterface
         ];
     }
 
-    public function verifyNewEmailIsAvailable(string $oldEmail, string $newEmail, int $id) : array {
-        $retorno = [];
-        $usuario = [];
+    public function verifyNewEmailIsAvailable(string $oldEmail, string $newEmail, int $id) : array 
+    {
+        $response = [];
+        $user = [];
 
         try {
-            $usuario = DB::table('users')
+            $user = DB::table('users')
                 ->select('id', 'name', 'email')
                 ->where('email', $newEmail)
                 ->where('id', '<>', $id)
                 ->first();
         } catch (\Throwable $e) {
-            throw new ErroDePersistenciaException();
+            throw new PersistenceErrorException();
         }
 
-        if (!empty($usuario)) {
-            $retorno = [
-                'id' => $usuario->id,
-                'name' => $usuario->name,
-                'email' => $usuario->email
+        if (!empty($user)) {
+            $response = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email
             ];
         }
 
-        return $retorno;
+        return $response;
     }
 
-    public function updateUser(int $id, string $name, string $email) : bool {
+    public function updateUser(int $id, string $name, string $email) : bool 
+    {
         try {
             $update = DB::table('users')
                 ->where('id', $id)
@@ -122,11 +127,12 @@ class UserRepository implements UserRepositoryInterface
 
             return true;
         } catch (\Throwable $e) {
-            throw new ErroDePersistenciaException();
+            throw new PersistenceErrorException();
         }
     }  
     
-    public function deleteUserById(int $id) : bool {
+    public function deleteUserById(int $id) : bool 
+    {
         try {
             $delete = DB::table('users')
                 ->where('id', $id)
@@ -138,24 +144,25 @@ class UserRepository implements UserRepositoryInterface
 
             return true;
         } catch (\Throwable $e) {
-            throw new ErroDePersistenciaException();
+            throw new PersistenceErrorException();
         }
     }
 
-    public function isAdmin(int $id): bool {
+    public function isAdmin(int $id): bool 
+    {
         try {
             $user = DB::table('users')
                 ->select('is_admin')
                 ->where('id', $id)
                 ->first();
         } catch (\Throwable $th) {
-            throw new ErroDePersistenciaException();
+            throw new PersistenceErrorException();
         }
 
         if ($user && $user->is_admin === 'Y') {
-            return true; // Usuário é admin
+            return true;
         }
 
-        return false; // Usuário não é admin
+        return false;
     }
 }

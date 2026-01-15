@@ -1,17 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\Web;
-use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Models\UserModel;
 
 
 class LoginController extends Controller
 {
-    public function loginView() {
+    public function loginView() 
+    {
         if (Auth::guard('web')->check()) {
             return redirect()->route('welcome');
         } else {
@@ -19,7 +20,7 @@ class LoginController extends Controller
         }
     }
 
-    public function realizarLogin(Request $request)
+    public function loginAttempt(Request $request)
     {
         $credentials = [
             'email' => $request->email ?? '', 
@@ -36,7 +37,7 @@ class LoginController extends Controller
             return redirect()->route('welcome');
 
         } else {
-            return view('login/login', ['erro' => 'INVALID CREDENTIALS.']);
+            return view('login/login', ['error' => 'INVALID CREDENTIALS.']);
         }
     }
 

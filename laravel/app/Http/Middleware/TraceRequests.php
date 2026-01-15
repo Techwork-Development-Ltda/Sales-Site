@@ -4,13 +4,12 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Throwable;
-use OpenTelemetry\API\Globals; // << usar Globals
+use OpenTelemetry\API\Globals;
 
 class TraceRequests
 {
     public function handle($request, Closure $next)
     {
-        // Pega o TracerProvider global inicializado pela Spatie
         $tp = Globals::tracerProvider();
         $tracer = $tp->getTracer('http');
 

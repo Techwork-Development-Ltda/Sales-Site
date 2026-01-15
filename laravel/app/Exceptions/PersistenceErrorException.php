@@ -4,11 +4,11 @@ namespace App\Exceptions;
 
 use Exception;
 
-class RedisSocketException extends Exception
+class PersistenceErrorException  extends Exception
 {
     protected $errors;
 
-    public function __construct(string $message = 'Error in Redis socket.', array $errors = [])
+    public function __construct(string $message = 'Unexpected error. Please contact support.', array $errors = [])
     {
         parent::__construct($message);
         $this->errors = $errors;
@@ -24,3 +24,5 @@ class RedisSocketException extends Exception
         ], 500);
     }
 }
+
+?>

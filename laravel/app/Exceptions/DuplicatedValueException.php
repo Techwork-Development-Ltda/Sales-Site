@@ -4,15 +4,15 @@ namespace App\Exceptions;
 
 use Exception;
 
-class RecursoDuplicadoException extends Exception
+class DuplicatedValueException extends Exception
 {
 
-    protected $erros;
+    protected $errors;
 
-    public function __construct(string $message = 'Duplicidade identificada.', array $erros = [])
+    public function __construct(string $message = 'Duplicated value detected.', array $errors = [])
     {
         parent::__construct($message);
-        $this->erros = $erros;
+        $this->errors = $errors;
     }
 
     public function render($request)
@@ -20,8 +20,8 @@ class RecursoDuplicadoException extends Exception
         return response()->json([
             'status' => false,
             'message' => $this->getMessage(),
-            'erros' => $this->erros,
-            'dados' => []
+            'errors' => $this->errors,
+            'data' => []
         ], 409);
     }
 }

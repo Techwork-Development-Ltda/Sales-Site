@@ -3,38 +3,31 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AuthModel;
 
 class ApiAuthenticate
 {
-   public function handle($request, Closure $next)
+    public function handle($request, Closure $next)
     {
         try {
-            // $token = JWTAuth::getToken();
-            // dd($token);die;
-            // Usar o JWTAuth para autenticar o usuário com base no token
             Auth::shouldUse('api');
-            $token = JWTAuth::getToken(); // Obtém o token da requisição
-            $payload = JWTAuth::getPayload($token); // Decodifica o token
-            $userId = $payload->get('sub'); // Obtém o "sub", que é o ID do usuário
+            $token = JWTAuth::getToken(); 
+            $payload = JWTAuth::getPayload($token); 
+            $userId = $payload->get('sub'); 
             $user = AuthModel::find($userId);
-            // Se o usuário não for encontrado
+
             if (!$user) {
-                return response()->json(['status' => false, 'message' => 'Usuário não autenticado.'], 401);
+                return response()->json(['status' => false, 'message' => 'User not authenticated.'], 401);
             }
-            // Permite a requisição avançar
+
             return $next($request);
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return response()->json(['status' => false, 'message' => 'Token expirado'], 401);
+            return response()->json(['status' => false, 'message' => 'Token expired'], 401);
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            return response()->json(['status' => false, 'message' => 'Token inválido'], 401);
+            return response()->json(['status' => false, 'message' => 'Invalid token'], 401);
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-            return response()->json(['status' => false, 'message' => 'Token não encontrado'], 401);
+            return response()->json(['status' => false, 'message' => 'Token not found'], 401);
         }
     }
 }

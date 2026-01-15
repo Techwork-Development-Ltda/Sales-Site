@@ -9,7 +9,7 @@ interface RequestValidationInterface
      *
      * @param array $credentials
      * @return void
-     * @throws \App\Exceptions\ParametrosInvalidosException
+     * @throws \App\Exceptions\InvalidParametersException
      */
     public static function validate(array $credentials): void;
 }

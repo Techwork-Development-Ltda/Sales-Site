@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Exceptions\ErroDePersistenciaException;
+use App\Exceptions\PersistenceErrorException;
 use App\Repository\Contracts\UserRepositoryInterface;
 
-use App\Exceptions\RecursoNaoEncontradoException;
-use App\Exceptions\RecursoDuplicadoException;
+use App\Exceptions\ResourceNotFoundException;
+use App\Exceptions\DuplicatedValueException;
 
 class UserService
 {
@@ -22,7 +22,7 @@ class UserService
     {
         $user = $this->userRepository->getUserById($id);
         if (empty($user)) {
-            throw new RecursoNaoEncontradoException("Usuário não encontrado.", ['ID não identificado']);
+            throw new ResourceNotFoundException("User not found.", ['ID not identified']);
         }
         
         $response = array(
@@ -34,7 +34,8 @@ class UserService
         return $response;
     }
 
-    public function insertUser(array $credentials) : array {
+    public function insertUser(array $credentials) : array 
+    {
         $this->verifyEmailIsAvailable($credentials['email']);
         $addition = $this->userRepository->insertUser($credentials);
         return [
@@ -44,36 +45,40 @@ class UserService
         ];
     }
 
-    private function verifyEmailIsAvailable(string $email) : void {
+    private function verifyEmailIsAvailable(string $email) : void 
+    {
         $user = $this->userRepository->getUserByEmail($email);
         if(!empty($user)) {
-            throw new RecursoDuplicadoException("Duplicidade identificada.", [
-                'Email já cadastrado.'
+            throw new DuplicatedValueException("Duplicate identified.", [
+                'Email already registered.'
             ]);
         }
     }
 
-    public function updateUser(array $credentials) : array {
+    public function updateUser(array $credentials) : array 
+    {
         //$this->checkUserExistById($credentials['id']);
         $this->checkNewUserEmailIsAvailable($credentials['id'], $credentials['email']);
         $update = $this->userRepository->updateUser($credentials['id'], $credentials['name'], $credentials['email']);
         if(!$update) {
-            throw new ErroDePersistenciaException();
+            throw new PersistenceErrorException();
         }
         return $credentials;
     }
 
-    private function checkUserExistById(int $id) : void {
+    private function checkUserExistById(int $id) : void 
+    {
         $user = $this->userRepository->getUserById($id);
         if (!$user) {
-            throw new RecursoNaoEncontradoException("Usuário não encontrado.", ['ID não identificado']);
+            throw new ResourceNotFoundException("User not found.", ['ID not identified.']);
         }
     }
 
-    private function checkNewUserEmailIsAvailable(int $id, string $newEmail) : void {
+    private function checkNewUserEmailIsAvailable(int $id, string $newEmail) : void 
+    {
         $user = $this->userRepository->getUserById($id);
         if (!$user) {
-            throw new RecursoNaoEncontradoException("Usuário não encontrado.", ['ID não identificado']);
+            throw new ResourceNotFoundException("User not found.", ['ID not identified.']);
         }
 
         if($user['email'] !== $newEmail) {
@@ -81,20 +86,22 @@ class UserService
         }
     }
 
-    private function verifyNewEmailIsAvailable(string $oldEmail, string $newEmail, $id) : void {
+    private function verifyNewEmailIsAvailable(string $oldEmail, string $newEmail, $id) : void 
+    {
         $user = $this->userRepository->verifyNewEmailIsAvailable($oldEmail, $newEmail, $id);
         if(!empty($user)) {
-            throw new RecursoDuplicadoException("Request inválido.", [
-                'Email já cadastrado.'
+            throw new DuplicatedValueException("Invalid request.", [
+                'Email already registered.'
             ]);
         }
     }
 
-    public function deleteUserById(int $id) : bool{
+    public function deleteUserById(int $id) : bool
+    {
         $this->checkUserExistById($id);
         $excluir = $this->userRepository->deleteUserById($id);
         if(!$excluir) {
-            throw new ErroDePersistenciaException();
+            throw new PersistenceErrorException();
         }
         return true;
     }

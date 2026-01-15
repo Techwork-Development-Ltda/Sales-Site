@@ -6,12 +6,12 @@ use Exception;
 
 class NotImplementedException  extends Exception
 {
-    protected $erros;
+    protected $errors;
 
-    public function __construct(string $message = 'Esta funcionalidade ainda não foi implementada.', array $erros = [])
+    public function __construct(string $message = 'Not implemented.', array $errors = [])
     {
         parent::__construct($message);
-        $this->erros = $erros;
+        $this->errors = $errors;
     }
 
     public function render($request)
@@ -19,8 +19,8 @@ class NotImplementedException  extends Exception
         return response()->json([
             'status' => false,
             'message' => $this->getMessage(),
-            'erros' => $this->erros,
-            'dados' => []
+            'errors' => $this->errors,
+            'data' => []
         ], 501);
     }
 }

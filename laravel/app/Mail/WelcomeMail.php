@@ -18,7 +18,7 @@ class WelcomeMail extends Mailable
     public function build()
     {
         return $this
-            ->subject('Bem-vindo!')
+            ->subject('Welcome!')
             ->view('emails.welcome', [
                 'name' => $this->name
             ]);

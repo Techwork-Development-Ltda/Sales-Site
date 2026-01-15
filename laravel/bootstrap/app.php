@@ -17,8 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'api' => ApiAuthenticate::class, // aqui substitui o middleware padrão
-            'web' => WebAuthenticate::class, // aqui substitui o middleware padrão
+            'api' => ApiAuthenticate::class,
+            'web' => WebAuthenticate::class,
         ]);
         //$middleware->append(TraceRequests::class);
     })->withProviders([

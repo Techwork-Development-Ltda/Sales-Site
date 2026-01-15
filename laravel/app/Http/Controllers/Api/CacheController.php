@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+
+use App\Http\Controllers\Controller;
 use App\Services\RedisService;
 
 class CacheController extends Controller
@@ -15,64 +17,60 @@ class CacheController extends Controller
         $this->redis = $redis;
     }
     
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
         $credentials = $request->only(['key', 'value', 'ttl']);
         $key = isset($credentials['key']) ? trim($credentials['key']) : null;
         $value = $credentials['value'] ?? null;
         $ttl = $credentials['ttl'] ?? 3600;
+        $ttl = is_numeric($ttl) ? (int)$ttl : 3600;
 
-        if (! $key || !$value || !ctype_digit((string)$ttl)) {
+        if (! $key || !$value) {
             return response()->json([
                 'status' => false,
-                'message' => 'Key e value são obrigatórios',
-                'erros' => ['key' => 'Campo obrigatório', 'value' => 'Campo obrigatório'],
-                'dados' => []
+                'message' => 'Invalid parameters.',
+                'errors' => ['key' => 'The key field is required.', 'value' => 'The value field is required.'],
+                'data' => []
             ], 400);
         }
 
-        // Deixa as exceptions serem lançadas
-        // O Laravel automaticamente chama o método render() delas
         $this->redis->set($key, $value, $ttl);
-        
         return response()->json([
             'status' => true,
-            'message' => 'Cache armazenado com sucesso.',
-            'erros' => [],
-            'dados' => ['key' => $key]
+            'message' => 'Cache stored successfully.',
+            'errors' => [],
+            'data' => ['key' => $key]
         ]);
     }
 
-    public function show(Request $request, string $key)
+    public function show(Request $request, string $key) : JsonResponse
     {
         $value = $this->redis->get($key);
-        
         if ($value === null) {
             return response()->json([
                 'status' => false,
-                'message' => 'Key não encontrada no cache.',
-                'erros' => [],
-                'dados' => []
+                'message' => 'Key not found in cache.',
+                'errors' => [],
+                'data' => []
             ], 404);
         }
 
         return response()->json([
             'status' => true,
-            'message' => 'Cache recuperado com sucesso.',
-            'erros' => [],
-            'dados' => ['key' => $key, 'value' => $value]
+            'message' => 'Cache retrieved successfully.',
+            'errors' => [],
+            'data' => ['key' => $key, 'value' => $value]
         ]);
     }
 
-    public function destroy(Request $request, string $key)
+    public function destroy(Request $request, string $key) : JsonResponse
     {
         $deleted = $this->redis->del($key);
-        
         return response()->json([
             'status' => true,
-            'message' => 'Cache removido com sucesso.',
-            'erros' => [],
-            'dados' => ['deleted_count' => $deleted]
+            'message' => 'Cache removed successfully.',
+            'errors' => [],
+            'data' => ['deleted_count' => $deleted]
         ]);
     }
 }

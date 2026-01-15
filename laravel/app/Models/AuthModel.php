@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -29,7 +27,7 @@ class AuthModel extends Authenticatable implements JWTSubject
 
     public function getAuthIdentifierName()
     {
-        return 'email'; // Este deve ser o nome da coluna do banco
+        return 'email';
     }
     
     public function getJWTIdentifier()

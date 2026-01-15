@@ -1,2 +1,2 @@
-<h1>Olá {{ $name }}</h1>
-<p>Seja bem-vindo à nossa aplicação.</p>
+<h1>Hello {{ $name }}</h1>
+<p>Welcome to our application.</p>

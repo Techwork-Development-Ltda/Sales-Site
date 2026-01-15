@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Redis;
-use Throwable;
 
 class RedisService
 {
@@ -54,10 +53,6 @@ class RedisService
         return $data;
     }
 
-    /**
-     * Método genérico (opcional)
-     * Permite executar qualquer comando Redis
-     */
     public function command(string $command, array $arguments = [])
     {
         return $this->client()->command($command, $arguments);
