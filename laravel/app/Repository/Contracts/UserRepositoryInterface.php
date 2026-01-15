@@ -10,4 +10,5 @@ interface UserRepositoryInterface
     public function verifyNewEmailIsAvailable(string $oldEmail, string $newEmail, int $id) : array;
     public function updateUser(int $id, string $name, string $email) : bool;
     public function deleteUserById(int $id) : bool;
+    public function addUserRole(int $id, int $role) : bool;
 }

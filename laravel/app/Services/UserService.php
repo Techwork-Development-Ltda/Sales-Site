@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
+use App\Events\UserRegistered;
+use App\Models\FeatureFlagModel;
 use App\Exceptions\PersistenceErrorException;
 use App\Repository\Contracts\UserRepositoryInterface;
 
 use App\Exceptions\ResourceNotFoundException;
 use App\Exceptions\DuplicatedValueException;
+
 
 class UserService
 {
@@ -38,9 +41,23 @@ class UserService
     {
         $this->verifyEmailIsAvailable($credentials['email']);
         $addition = $this->userRepository->insertUser($credentials);
+        $userId = $addition['id'] ?? null;
+        if(empty($userId)) {
+            throw new PersistenceErrorException();
+        }
+
+        $roleAdded = $this->userRepository->addUserRole($userId, 3);
+        if(!$roleAdded) {
+            throw new PersistenceErrorException();
+        }
+
+        if (FeatureFlagModel::where('key', 'email_send_enabled')->value('enabled')) {
+            event(new UserRegistered($userId, $addition['email'], $addition['name']));
+        }
+
         return [
-            'id' => $addition['id'],
-            'user' => $addition['name'],
+            'id' => $userId,
+            'name' => $addition['name'],
             'email' => $addition['email']
         ];
     }

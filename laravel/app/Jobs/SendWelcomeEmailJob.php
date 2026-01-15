@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
 use App\Mail\WelcomeMail;
+use App\Models\FeatureFlagModel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -30,6 +31,9 @@ class SendWelcomeEmailJob implements ShouldQueue
 
     public function handle(): void
     {
+        if (FeatureFlagModel::where('key', 'email_send_enabled')->value('enabled')) {
+            return;
+        }
 
         try {
             Mail::to($this->email)

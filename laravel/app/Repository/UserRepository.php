@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 use App\Repository\Contracts\UserRepositoryInterface;
-use App\Events\UserRegistered;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -74,8 +73,6 @@ class UserRepository implements UserRepositoryInterface
         } catch (\Throwable $th) {
             throw new PersistenceErrorException();
         }  
-
-        event(new UserRegistered($id, $data['email'], $data['name']));
         
         return [
             'id' => $id,
@@ -164,5 +161,29 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return false;
+    }
+
+    public function addUserRole(int $id, int $role) : bool 
+    {
+        try {
+            $roleId = DB::table('roles')
+                ->where('id', $role)
+                ->value('id');
+
+            if (empty($roleId)) {
+                throw new PersistenceErrorException("Role not found.");
+            }
+
+            if(DB::table('role_user')->insert([
+                'user_id' => $id,
+                'role_id' => $roleId
+            ])) {
+                return true;
+            }
+
+            return false;
+        } catch (\Throwable $e) {
+            throw new PersistenceErrorException();
+        }
     }
 }
