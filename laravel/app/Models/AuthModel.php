@@ -24,11 +24,6 @@ class AuthModel extends Authenticatable implements JWTSubject
         'email',
         'password',
     ];
-
-    public function getAuthIdentifierName()
-    {
-        return 'email';
-    }
     
     public function getJWTIdentifier()
     {

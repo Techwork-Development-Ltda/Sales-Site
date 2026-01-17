@@ -11,4 +11,5 @@ Route::post('/login', [LoginController::class, 'loginAttempt'])->name('login.att
 //Authentication required
 Route::middleware('web.stack')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('auth.logout');
+    Route::get('/home', [HomeController::class, 'homeView'])->name('home');
 });

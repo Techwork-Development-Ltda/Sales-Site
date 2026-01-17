@@ -1,17 +1,12 @@
 <?php
 namespace App\Http\Middleware;
 
-use Closure;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Middleware\Authenticate;
 
-class WebAuthenticate
+class WebAuthenticate extends Authenticate
 {
-    public function handle($request, Closure $next, ...$guards)
+    protected function redirectTo($request): ?string
     {
-        if (!Auth::guard('web')->check()) {
-            return redirect('/login')->withErrors(['error' => 'User not authenticated!']);
-        }
-
-        return $next($request);
+        return route('login');
     }
 }
